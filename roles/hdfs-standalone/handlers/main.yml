@@ -1,0 +1,12 @@
+---
+- name: Restart Hadoop HDFS name node
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh stop namenode; hadoop-daemon.sh start namenode
+  when: hdfs_namenode
+
+- name: Restart Hadoop HDFS data node
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh stop datanode; hadoop-daemon.sh start datanode
+  when: not hdfs_namenode

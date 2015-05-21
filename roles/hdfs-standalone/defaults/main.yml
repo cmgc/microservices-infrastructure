@@ -1,0 +1,11 @@
+---
+hdfs_version: "2.6.0"
+hdfs_conf_dir: "/etc/hadoop/conf"
+hdfs_install_dir: "/usr/local/share"
+hdfs_namenode_port: 8020
+hdfs_hadoop_opts: "-Djava.net.preferIPv4Stack=true"
+hdfs_properties:
+  - { name: "dfs.name.dir", value: "/dfs/nn" }
+  - { name: "dfs.data.dir", value: "/dfs/dn" }
+  - { name: "dfs.replication", value: 1 }
+  - { name: "dfs.webhdfs.enabled", value: 1 }

@@ -1,0 +1,13 @@
+---
+- name: Create HDFS group
+  sudo: true
+  group: 
+    name: hdfs 
+    state: present
+
+- name: Create Hadoop user
+  sudo: true
+  user:
+    name: hdfs
+    groups: wheel,hdfs
+    generate_ssh_key: yes

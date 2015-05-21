@@ -1,0 +1,38 @@
+---
+- name: Configure Hadoop HDFS data node
+  sudo: yes
+  template:
+    src: "{{ item }}.xml.j2"
+    dest: "{{ hdfs_conf_dir }}/{{ item }}.xml"
+  with_items:
+    - core-site
+    - hdfs-site
+  notify:
+    - Restart Hadoop HDFS data node
+  tags:
+    - hdfs
+
+- name: Create Hadoop HDFS data node data directories
+  sudo: true
+  file: 
+    path: "/dfs/dn"
+    owner: hdfs
+    group: hdfs
+    state: directory
+  register: existing_data_directory
+  tags:
+    - hdfs
+
+- name: Stop the Hadoop HDFS data node service if it is running
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh stop datanode
+  tags:
+    - hdfs
+
+- name: Enable and start the Hadoop HDFS data node service
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh start datanode
+  tags:
+    - hdfs

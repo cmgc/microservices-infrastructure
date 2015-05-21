@@ -1,0 +1,12 @@
+---
+# DC1
+- hosts: dc1:&mesos_followers
+  gather_facts: no
+  roles:
+    - spark
+
+# DC2
+- hosts: dc2:&mesos_followers
+  gather_facts: no
+  roles:
+    - spark

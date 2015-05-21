@@ -1,0 +1,65 @@
+---
+- name: Install Java SDK
+  sudo: true
+  yum: 
+    name: java-1.8.0-openjdk
+    state: present
+
+- include: users.yml
+
+- name: Create HDFS installation directory
+  sudo: true
+  file: 
+    path: "{{ hdfs_install_dir }}"
+    owner: hdfs
+    group: hdfs
+    state: directory
+  register: created_hdfs_install_dir
+  tags:
+    - hdfs
+
+- name: Create HDFS configuration directory
+  sudo: true
+  file: 
+    path: "{{ hdfs_conf_dir }}"
+    owner: hdfs
+    group: hdfs
+    state: directory
+  register: created_hdfs_conf_dir
+  tags:
+    - hdfs
+
+- name: Download HDFS binary
+  sudo: true
+  get_url:
+    url: "http://apache.mirrors.pair.com/hadoop/common/hadoop-{{ hdfs_version }}/hadoop-{{ hdfs_version }}.tar.gz" 
+    dest: /tmp/hadoop-{{ hdfs_version }}.tar.gz
+  tags:
+    - hdfs
+
+- name: Setup HDFS binary
+  sudo_user: hdfs
+  sudo: true
+  unarchive: 
+    src: /tmp/hadoop-{{ hdfs_version }}.tar.gz 
+    dest: "{{ hdfs_install_dir }}"
+    copy: no
+  tags:
+    - hdfs
+
+- name: Setup HDFS environment
+  sudo: true
+  template:
+    src: "hadoop.sh.j2"
+    dest: "/etc/profile.d/hadoop.sh"
+  tags:
+    - hdfs
+
+- include: namenode.yml
+  when: hdfs_namenode 
+
+- include: datanode.yml
+  when: not hdfs_namenode 
+
+- include: hdfs.yml
+  when: hdfs_namenode

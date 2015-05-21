@@ -1,0 +1,5 @@
+debug={{ debug_enabled }}
+storage=zk:/kafka-mesos
+master=zk://{{ zookeeper_master }}:2181/mesos
+zk={{ zookeeper_master }}:2181
+api=http://{{ kafka_scheduler_hostname }}:7000

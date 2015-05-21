@@ -22,6 +22,9 @@ host-[01:03]
 [marathon_servers]
 host-[01:03]
 
+[name_node]
+host-01
+
 # resource nodes
 [consul_clients]
 host-[04:05]
@@ -30,4 +33,10 @@ host-[04:05]
 host-[04:05]
 
 [proxy_servers]
+host-[04:05]
+
+[data_nodes]
+host-[04:05]
+
+[kafka_scheduler]
 host-[04:05]

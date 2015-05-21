@@ -1,0 +1,12 @@
+---
+# DC1
+- hosts: dc1:&kafka_scheduler
+  gather_facts: no
+  roles:
+    - kafka
+
+# DC2
+- hosts: dc2:&kafka_scheduler
+  gather_facts: no
+  roles:
+    - kafka

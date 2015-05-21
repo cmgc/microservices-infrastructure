@@ -1,0 +1,5 @@
+# Default system properties included when running spark-submit.
+# This is useful for setting default environmental settings.
+
+spark.master                       mesos://zk://{{ zookeeper_master }}:2181/mesos
+spark.executor.uri                 file://{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz

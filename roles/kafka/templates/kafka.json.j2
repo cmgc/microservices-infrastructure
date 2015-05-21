@@ -1,0 +1,17 @@
+{
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "network": "HOST",
+            "image": "y4rv1k/kafka",
+            "forcePullImage": true,
+            "privileged": true
+        }
+    },
+    "id":"kafka-mesos-scheduler",
+    "cpus": 1,
+    "mem": 2048,
+    "cmd": "./kafka-mesos.sh scheduler --master=zk://{{ zookeeper_master }}:2181/mesos --zk={{ zookeeper_master }}:2181 --api=http://{{ ansible_hostname }}:7000 --storage=zk:/kafka-mesos",
+    "instances": 1,
+    "constraints": [["hostname", "LIKE", "{{ ansible_hostname }}"]]
+}

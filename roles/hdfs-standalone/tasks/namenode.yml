@@ -1,0 +1,55 @@
+---
+- name: Configure Hadoop HDFS name node
+  sudo: true
+  template:
+    src: "{{ item }}.xml.j2"
+    dest: "{{ hdfs_conf_dir }}/{{ item }}.xml"
+  with_items:
+    - core-site
+    - hdfs-site
+  notify:
+    - Restart Hadoop HDFS name node
+  tags:
+    - hdfs
+
+- name: Download a public key
+  fetch: 
+    src: "/home/hdfs/.ssh/id_rsa.pub"
+    dest: "/tmp/id_rsa.pub"
+    flat: yes
+  register: fetch_public_key
+  tags:
+    - hdfs
+
+- name: Create Hadoop HDFS name node data directories
+  sudo: true
+  file: 
+    path: "/dfs/nn"
+    owner: hdfs
+    group: hdfs
+    state: directory
+  register: created_hdfs_namenode_data_dir
+  tags:
+    - hdfs
+
+- name: Format HDFS name node data directories
+  sudo_user: hdfs
+  sudo: true
+  shell: source /etc/profile.d/hadoop.sh; hdfs namenode -format
+  when: created_hdfs_namenode_data_dir | changed
+  tags:
+    - hdfs
+
+- name: Stop HDFS name node 
+  sudo_user: hdfs
+  sudo: true
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh stop namenode
+  tags:
+    - hdfs
+
+- name: Enable and start the Hadoop HDFS name node service
+  sudo_user: hdfs
+  sudo: true
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh start namenode
+  tags:
+    - hdfs

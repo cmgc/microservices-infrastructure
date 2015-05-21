@@ -1,0 +1,26 @@
+---
+- name: Setup Spark binary
+  sudo: true
+  unarchive:
+    src: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"
+    dest: "{{ spark_install_dir }}"
+    copy: no
+  tags:
+    - spark
+
+- name: Setup Spark environment
+  sudo: true
+  template:
+    src: "spark.sh.j2"
+    dest: "/etc/profile.d/spark.sh"
+  tags:
+    - spark
+
+- name: Create Spark configuration
+  sudo: true
+  template:
+    src: "spark-defaults.conf.j2"
+    dest: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}/conf/spark-defaults.conf"
+  tags:
+    - spark
+

@@ -1,0 +1,22 @@
+---
+# DC1
+- hosts: dc1:&name_node
+  gather_facts: no
+  roles:
+    - {role: hdfs-standalone, hdfs_namenode: true}
+
+- hosts: dc1:&data_nodes
+  gather_facts: no
+  roles:
+    - {role: hdfs-standalone, hdfs_namenode: false}
+
+# DC2
+- hosts: dc2:&name_node
+  gather_facts: no
+  roles:
+    - {role: hdfs-standalone, hdfs_namenode: true}
+
+- hosts: dc2:&data_nodes
+  gather_facts: no
+  roles:
+    - {role: hdfs-standalone, hdfs_namenode: false}
