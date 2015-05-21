@@ -1,0 +1,95 @@
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+  tags:
+    - monitoring
+
+- name: install pip
+  sudo: yes
+  yum:
+    name: python-pip
+    state: latest
+  tags:
+    - monitoring
+
+- name: update setuptools and pip
+  sudo: yes
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: setuptools
+  tags:
+    - monitoring
+
+- name: install collectd
+  sudo: yes
+  yum:
+    name: collectd
+    state: latest
+  tags:
+    - monitoring
+
+- name: deploy collectd daemon configuration
+  sudo: yes
+  template:
+    src: collectd.conf.j2
+    dest: /etc/collectd.conf
+  tags:
+    - monitoring
+
+- name: deploy collectd network plugin configuration
+  sudo: yes
+  template:
+    src: write_network.conf.j2
+    dest: /etc/collectd.d/write_network.conf
+  tags:
+    - monitoring
+
+- name: create collectd docker plugin directory
+  sudo: yes
+  file:
+    path: /usr/share/collectd/docker-collectd-plugin/
+    state: directory
+    mode: 0770
+  tags:
+  - monitoring
+
+- name: deploy collectd docker plugin configfile
+  sudo: yes
+  copy:
+    src: "roles/monitoring/files/read_docker.conf"
+    dest: "/etc/collectd.d/read_docker.conf"
+    mode: u=r
+  tags:
+    - monitoring
+
+- name: deploy collectd docker plugin files
+  sudo: yes
+  copy:
+    src: "roles/monitoring/files/{{ item.src }}"
+    dest: "/usr/share/collectd/docker-collectd-plugin/{{ item.dest }}"
+    mode: u=r
+  with_items:
+    - src: docker-plugin-requirements.txt
+      dest: requirements.txt
+    - src: dockerplugin.py
+      dest: dockerplugin.py
+    - src: dockerplugin.db
+      dest: dockerplugin.db
+  tags:
+    - monitoring
+
+- name: install docker plugin requirements
+  sudo: yes
+  pip:
+    requirements: "/usr/share/collectd/docker-collectd-plugin/requirements.txt"
+  notify:
+    - restart collectd
+  tags:
+    - monitoring
+
+

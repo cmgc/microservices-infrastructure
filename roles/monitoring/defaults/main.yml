@@ -1,0 +1,3 @@
+---
+logging_host: "{{ ansible_ssh_host }}"
+logging_host_port: "25826"

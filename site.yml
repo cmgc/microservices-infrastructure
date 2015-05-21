@@ -20,6 +20,7 @@
     - consul-template
     - docker
     - dnsmasq
+    - monitoring
     - nginx
     - consul
     - logstash

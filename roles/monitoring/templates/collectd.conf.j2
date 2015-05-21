@@ -1,0 +1,32 @@
+#
+# - for static ip and valid dns fwd/rev
+#   uncomment next two lines
+##Hostname
+#FQDNLookup true
+#
+#
+# - for dynamic ip and hostname
+#   uncomment next two lines and put correct hostname between quotes
+Hostname "{{ ansible_hostname }}"
+FQDNLookup false
+
+# interval at which collectd will collect metrics
+Interval 5
+
+TypesDB     "/usr/share/collectd/types.db"
+
+#Uncomment for debug purposes
+#LoadPlugin syslog
+#<Plugin "syslog">
+#  LogLevel "info"
+#  NotifyLevel "OKAY"
+#</Plugin>
+
+# Example data
+LoadPlugin cpu
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+
+
+Include "/etc/collectd.d/*.conf"
