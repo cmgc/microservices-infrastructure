@@ -4,9 +4,15 @@
     "tags": [ "{{ zookeeper_ensemble }}" ],
     "id": "2181:zkid-{{ zookeeper_id }}",
     "port": 2181,
-    "check": {
+    "checks": [ 
+    {
       "script": "/usr/local/bin/zookeeper_check.sh",
       "interval": "10s"
+    },
+    {
+      "script": "/usr/local/bin/zookeeper_latency_check.sh",
+      "interval": "10m"
     }
-  }
+  ]
+}
 }

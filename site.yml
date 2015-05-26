@@ -32,7 +32,7 @@
    - vault
 
 - hosts: dc1:&zookeeper_servers
-  gather_facts: no
+  gather_facts: yes
   roles:
     - zookeeper
 

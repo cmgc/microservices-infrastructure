@@ -26,6 +26,17 @@
   tags: 
     - zookeeper
 
+- name: zookeeper latency check script
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: zookeeper_latency_check.sh.j2
+      dest: /usr/local/bin/zookeeper_latency_check.sh
+  tags:
+    - zookeeper
+
 - name: generate systemd service file 
   sudo: yes
   template:
@@ -46,6 +57,31 @@
   with_items:
     - src: zookeeper_check.sh
       dest: /usr/local/bin
+  tags:
+    - zookeeper
+
+- name: zookeper latency scripts and libs
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - src: zk-latencies.py
+      dest: /usr/local/bin
+      mode: u=rwx
+    - src: zookeeper.so
+      dest: /usr/local/lib
+      mode: u=rw
+    - src: libzookeeper_mt.so.2
+      dest: /usr/local/lib
+      mode: u=rw
+    - src: zkclient.py
+      dest: /usr/local/bin
+      mode: u=rw
+  when: "'zookeeper_servers' in {{ group_names }}"
+  notify:
+    - reload consul
   tags:
     - zookeeper
 
