@@ -36,6 +36,7 @@
   gather_facts: no
   roles:
     - zookeeper
+    - exhibitor
 
 - hosts: dc1:&mesos_leaders
   gather_facts: no
