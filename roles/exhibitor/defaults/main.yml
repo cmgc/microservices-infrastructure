@@ -1,0 +1,7 @@
+---
+exhibitor_image: cmgc/exhibitor
+exhibitor_image_tag: latest
+exhibitor_ports: "-p 8181:8181"
+exhibitor_container_name: exhibitor
+zookeeper_data_volume: zookeeper-data-volume
+exhibitor_service: exhibitor

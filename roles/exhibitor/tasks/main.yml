@@ -1,0 +1,11 @@
+---
+- name: generate systemd service file 
+  sudo: yes
+  template:
+    src: exhibitor-service.j2 
+    dest: "/usr/lib/systemd/system/{{ exhibitor_service }}.service"
+  notify: 
+    - register exhibitor service
+    - reload systemd daemon 
+  tags: 
+    - exhibitor
