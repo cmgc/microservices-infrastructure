@@ -25,6 +25,13 @@
   tags:
     - hdfs
 
+- name: Wait until HDFS name node leaves the safe mode
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; until [ "`hdfs dfsadmin -safemode get`" == "Safe mode is OFF" ]; do sleep 10; done
+  tags:
+    - hdfs
+
 - name: Setup initial directories on HDFS
   run_once: true
   sudo_user: hdfs
