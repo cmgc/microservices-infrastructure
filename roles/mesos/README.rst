@@ -141,11 +141,11 @@ Example Playbook
 
     ---
     - hosts: mesos_leaders
-      roles: 
+      roles:
         - role: mesos
           mesos_mode: leader
-    
+
     - hosts: mesos_followers
-      roles: 
+      roles:
         - role: mesos
           mesos_mode: follower

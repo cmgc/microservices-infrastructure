@@ -25,5 +25,38 @@
     name: httpd-tools
     state: present
 
+- name: install nc
+  sudo: yes
+  yum:
+    name: nmap-ncat
+    state: present
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
+- name: install pip
+  sudo: yes
+  yum:
+    name: python-pip
+    state: latest
+
+- name: update setuptools and pip
+  sudo: yes
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: setuptools
+
 - include: users.yml
 - include: ssl.yml

@@ -1,0 +1,65 @@
+---
+- include: provision.yml
+
+- name: Check whether the storage device exists or not
+  shell: "test -e /dev/{{ storage_device }}"
+  register: device_exists
+  ignore_errors: True
+  tags: external-drives
+
+- name: Define a partition if needed
+  shell: "if ! test -e /dev/{{ storage_device }}1; then echo ';' | sfdisk /dev/{{ storage_device }}; fi;"
+  sudo: yes
+  when: device_exists|success
+  tags: external-drives
+
+- name: Collect information about the partition
+  shell: "file -sL /dev/{{ storage_device }}1"
+  sudo: yes
+  when: device_exists|success
+  register: partition_info
+  tags: external-drives
+
+- name: Format the partition
+  shell: "mkfs.ext4 /dev/{{ storage_device }}1"
+  sudo: yes
+  when: device_exists|success and 'ext4' not in partition_info.stdout
+  tags: external-drives
+
+- name: Create a mount directory
+  file:
+    path: "/mnt/{{ storage_device }}"
+    state: directory
+  sudo: yes
+  when: device_exists|success
+  tags: external-drives
+
+- name: Mount the partition
+  mount:
+    name: "/mnt/{{ storage_device }}"
+    src: "/dev/{{ storage_device }}1"
+    fstype: ext4
+    state: mounted
+  sudo: yes
+  when: device_exists|success
+  tags: external-drives
+
+- name: Stop Hadoop HDFS data node
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh stop datanode
+  when: device_exists|success
+  tags: external-drives
+
+- name: Move /dfs to the partition if needed
+  shell: "if test -d /dfs && ! test -h /dfs; then mv /dfs /mnt/{{ storage_device }}; ln -s /mnt/{{ storage_device }}/dfs /dfs; fi"
+  sudo: yes
+  when: device_exists|success
+  tags: external-drives
+
+- name: Start Hadoop HDFS data node
+  sudo: true
+  sudo_user: hdfs
+  shell: source /etc/profile.d/hadoop.sh; hadoop-daemon.sh start datanode
+  when: device_exists|success
+  tags: external-drives

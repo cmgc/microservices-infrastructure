@@ -1,0 +1,68 @@
+#!/bin/bash
+
+function gather_load_level()
+{
+    core_amount=$(grep processor /proc/cpuinfo | wc -l)
+    load_1min=`cat /proc/loadavg | awk '{print $1}'`
+    load_5min=`cat /proc/loadavg | awk '{print $2}'`
+    load_15min=`cat /proc/loadavg | awk '{print $3}'`
+    warning_level={{ consul_load_warning }}
+    critical_level={{ consul_load_critical }}
+}
+
+case $1 in
+  disk)
+    persistent_disk_level=$(df | grep \/$ | awk '{ print $5 }' | sed -e 's/%//')
+    persistent_inode_level=$(df -i | grep \/$ | awk '{ print $5 }' | sed -e 's/%//')
+
+    if [[ $persistent_disk_level -ge {{ consul_disk_critical }} ]] || [[ $persistent_inode_level -ge {{ consul_disk_critical }}  ]]; then
+      echo "Disk / CRITICAL - used space:  $persistent_disk_level% (inode=$persistent_inode_level%)"
+      exit 2
+
+    elif [[ $persistent_disk_level -ge {{ consul_disk_warning }} ]] || [[ $persistent_inode_level -ge {{ consul_disk_warning }} ]]; then
+      echo "Disk / WARNING - used space:  $persistent_disk_level% (inode=$persistent_inode_level%)"
+      exit 1
+
+    else echo "Disk / OK - used space: $persistent_disk_level% (inode=$persistent_inode_level%)"
+
+    fi
+    ;;
+
+  load)
+    gather_load_level
+
+    if [[ ( "$core_amount * $critical_level" < $load_15min ) ]]; then
+       echo "CRITICAL - load average : $load_1min, $load_5min, $load_15min"
+       exit 2;
+
+    elif [[ ( "$core_amount * $warning_level" < $load_15min ) ]]; then
+       echo "WARNING - load average : $load_1min, $load_5min, $load_15min"
+       exit 1;
+
+    else echo "OK - load average : $load_1min, $load_5min, $load_15min"
+
+    fi
+    ;;
+
+    memory)
+    persistent_memory_level=$(free | grep Mem | awk '{printf "%d\n", $4/$2 * 100.0}')
+    persistent_swap_level=$(free | grep Swap | awk '{if($3==0) print 100; else printf "%d\n", $4/$2 * 100.0}')
+
+    if [[ $persistent_memory_level -le {{ consul_memory_critical }} ]]; then
+      echo "CRITICAL: memory free - $persistent_memory_level% (swap free - $persistent_swap_level%)"
+      exit 2
+
+    elif [[ $persistent_memory_level -le {{ consul_memory_warning }} ]]; then
+      echo "WARNING: Memory free - $persistent_memory_level% (swap free - $persistent_swap_level%)"
+      exit 1
+
+    else echo "OK: memory free - $persistent_memory_level% (swap free - $persistent_swap_level%)"
+
+    fi
+    ;;
+
+  *)
+    echo "Usage: health-check.sh {disk|load|memory}"
+    ;;
+esac
+exit 0

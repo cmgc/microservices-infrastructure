@@ -1,8 +1,8 @@
 ---
 - name: restart collectd
-  sudo: yes 
+  sudo: yes
   service:
     name: "collectd"
     state: restarted
-  tags: 
+  tags:
     - monitoring

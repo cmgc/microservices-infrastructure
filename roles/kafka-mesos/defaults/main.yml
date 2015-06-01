@@ -1,0 +1,14 @@
+---
+kafka_mesos_install_dir: "/usr/local/share/kafka-mesos"
+kafka_binary_url: "https://archive.apache.org/dist/kafka"
+kafka_version: "0.8.2.1"
+kafka_scala_version: "2.10"
+kafka_mesos_repo: "https://github.com/mesos/kafka"
+mesos_lib: "/usr/local/lib/libmesos.so"
+zookeeper_master: "zookeeper.service.consul"
+marathon: "marathon.service.consul"
+kafka_scheduler_hostname: "kafka-mesos-scheduler.service.consul"
+kafka_brokers: 3
+kafka_broker_memory: 512
+kafka_broker_heap: 256 
+debug_enabled: false

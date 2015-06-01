@@ -1,30 +1,3 @@
-- name: enable EPEL repo
-  sudo: yes
-  yum:
-    name: epel-release
-    state: latest
-  tags:
-    - monitoring
-
-- name: install pip
-  sudo: yes
-  yum:
-    name: python-pip
-    state: latest
-  tags:
-    - monitoring
-
-- name: update setuptools and pip
-  sudo: yes
-  pip:
-    name: "{{ item.name }}"
-    state: latest
-  with_items:
-    - name: pip
-    - name: setuptools
-  tags:
-    - monitoring
-
 - name: install collectd
   sudo: yes
   yum:
@@ -32,6 +5,7 @@
     state: latest
   tags:
     - monitoring
+
 
 - name: deploy collectd daemon configuration
   sudo: yes
@@ -52,18 +26,17 @@
 - name: create collectd docker plugin directory
   sudo: yes
   file:
-    path: /usr/share/collectd/docker-collectd-plugin/
+    path: /usr/share/collectd/plugins
     state: directory
     mode: 0770
   tags:
   - monitoring
 
-- name: deploy collectd docker plugin configfile
+- name: deploy collectd python plugins configuration
   sudo: yes
-  copy:
-    src: "roles/monitoring/files/read_docker.conf"
-    dest: "/etc/collectd.d/read_docker.conf"
-    mode: u=r
+  template:
+    src: python-plugins.conf.j2
+    dest: /etc/collectd.d/python-plugins.conf
   tags:
     - monitoring
 
@@ -71,22 +44,23 @@
   sudo: yes
   copy:
     src: "roles/monitoring/files/{{ item.src }}"
-    dest: "/usr/share/collectd/docker-collectd-plugin/{{ item.dest }}"
+    dest: "/usr/share/collectd/plugins/{{ item.src }}"
     mode: u=r
   with_items:
     - src: docker-plugin-requirements.txt
-      dest: requirements.txt
     - src: dockerplugin.py
-      dest: dockerplugin.py
     - src: dockerplugin.db
-      dest: dockerplugin.db
+    - src: marathon.py
+    - src: mesos-master.py
+    - src: mesos-slave.py
+    - src: zookeper.py
   tags:
     - monitoring
 
 - name: install docker plugin requirements
   sudo: yes
   pip:
-    requirements: "/usr/share/collectd/docker-collectd-plugin/requirements.txt"
+    requirements: "/usr/share/collectd/plugins/docker-plugin-requirements.txt"
   notify:
     - restart collectd
   tags:

@@ -16,3 +16,11 @@ consul_acl_datacenter: dc1
 consul_acl_default_policy: "allow"
 consul_acl_down_policy: "allow"
 
+# Variables for monitoring purposes
+consul_load_warning: 1
+consul_load_critical: 2
+consul_disk_warning: 80
+consul_disk_critical: 95
+consul_memory_warning: 10
+consul_memory_critical: 5
+consul_check_interval: "40s"

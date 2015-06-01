@@ -1,5 +1,5 @@
 ---
-# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161 
+# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161
 - name: install latest device-mapper-libs
   sudo: yes
   yum:
@@ -36,3 +36,13 @@
     state: started
   tags:
     - docker
+
+- name: install docker python module
+  sudo: yes
+  yum:
+    name: docker-python
+    state: latest
+  tags:
+    - docker
+
+- include: collectd.yml

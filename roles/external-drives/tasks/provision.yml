@@ -1,0 +1,14 @@
+---
+- name: Attach a volume
+  connection: local
+  nova_volume:
+    name: "{{ inventory_hostname }}-{{ storage_device }}"
+    server: "{{ inventory_hostname }}"
+    auth_url: "{{ os_auth_url }}"
+    login_username: "{{ lookup('env', 'OS_USERNAME') }}"
+    login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
+    login_tenant_name: "{{ os_tenant_name }}"
+    device_name: "/dev/{{ storage_device }}"
+    size: "{{ storage_size }}"
+    state: present
+  tags: external-drives

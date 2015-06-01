@@ -5,7 +5,7 @@
     name: hdfs 
     state: present
 
-- name: Create Hadoop user
+- name: Create HDFS user
   sudo: true
   user:
     name: hdfs

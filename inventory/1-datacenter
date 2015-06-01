@@ -22,6 +22,9 @@ host-[01:03]
 [marathon_servers]
 host-[01:03]
 
+[chronos_servers]
+host-[01:03]
+
 [name_node]
 host-01
 
@@ -38,5 +41,5 @@ host-[04:05]
 [data_nodes]
 host-[04:05]
 
-[kafka_scheduler]
+[kafka]
 host-[04:05]

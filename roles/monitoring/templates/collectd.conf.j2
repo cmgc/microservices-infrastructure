@@ -16,10 +16,11 @@ Interval 5
 TypesDB     "/usr/share/collectd/types.db"
 
 #Uncomment for debug purposes
-#LoadPlugin syslog
-#<Plugin "syslog">
-#  LogLevel "info"
-#  NotifyLevel "OKAY"
+#LoadPlugin "logfile"
+#<Plugin "logfile">
+#  LogLevel "debug"
+#  File STDOUT
+#  Timestamp true
 #</Plugin>
 
 # Example data
@@ -30,3 +31,4 @@ LoadPlugin memory
 
 
 Include "/etc/collectd.d/*.conf"
+

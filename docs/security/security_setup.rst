@@ -1,10 +1,10 @@
 the security-setup script
 =========================
 
-The ``security-setup`` script is located in the root of the project. It will set up
-authentication and authorization for you, as described in the :doc:`component
-documentation <../components/index>`. When components are updated, you can run it
-again, as many times as you want. It will only set the variables it needs to.
+The ``security-setup`` script is located in the root of the project. It will set
+up authentication and authorization for you, as described in the :doc:`component
+documentation <../components/index>`. When components are updated, you can run
+it again, as many times as you want. It will only set the variables it needs to.
 
 After you've set up security with the script, you can include it in your
 playbook runs by specifying the ``-e`` or ``--extra-vars`` option, like so::
@@ -14,9 +14,9 @@ playbook runs by specifying the ``-e`` or ``--extra-vars`` option, like so::
 Certificates
 ------------
 
-If not present, ``security-setup`` will create a root CA to generate certificates
-from. If you want to use your own CA, add the key in ``ssl/private/cakey.pem``
-and the cert in ``ssl/cacert.pem``.
+If not present, ``security-setup`` will create a root CA to generate
+certificates from. If you want to use your own CA, add the key in
+``ssl/private/cakey.pem`` and the cert in ``ssl/cacert.pem``.
 
 If you have your own (self)signed certificates, you can put them in
 ``ssl/private/your.key.pem`` and ``ssl/certs/your.cert.pem``. Just override the
@@ -31,8 +31,8 @@ component in ``private`` and re-run ``security-setup``.
 Boolean Options
 ---------------
 
-Options like :ref:`--mesos` take a boolean argument. You can use the following
-values (and their ilk) in these options:
+Options like ``--mesos`` take a boolean argument. You can use the following
+values in these options:
 
 ======= ==============
 Value   Interpreted as
@@ -92,6 +92,12 @@ Options
 .. option:: --marathon
 
    Enable Marathon security. This overrides all other Marathon options.
+
+   Default: ``True``
+
+.. option:: --chronos
+
+   Enable Chronos security. This overrides all other Chronos options.
 
    Default: ``True``
 
@@ -214,5 +220,23 @@ Options
 .. option:: --marathon-iptables
 
    enable Marathon iptables rules to restrict access
+
+   default: ``True``
+
+.. option:: --chronos-ssl
+
+   enable Chronos SSL
+
+   default: ``True``
+
+.. option:: --chronos-auth
+
+   enable Chronos authentication
+
+   default: ``True``
+
+.. option:: --chronos-iptables
+
+   enable Chronos iptables rules to restrict access
 
    default: ``True``

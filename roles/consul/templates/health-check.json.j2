@@ -1,0 +1,27 @@
+{
+  "checks": [
+  {
+    "id": "root-disk-level",
+    "name": "Persistent disk check",
+    "notes": "Critical {{ consul_disk_critical }}%, warning {{ consul_disk_warning }}% usage",
+    "script": "/usr/local/bin/health-check.sh disk",
+    "interval": "{{ consul_check_interval }}"
+  },
+  {
+    "id": "memory-usage-level",
+    "name": "Persistent memory check",
+    "notes": "Critical {{ consul_memory_critical }}%, warning {{ consul_memory_warning }}% free",
+    "script": "/usr/local/bin/health-check.sh memory",
+    "interval": "{{ consul_check_interval }}"
+  },
+  {
+    "id": "load-avegare-level",
+    "name": "Load avegare check",
+    "notes": "Critical load average {{ consul_load_critical }}, warning load average {{ consul_load_warning }}",
+    "script": "/usr/local/bin/health-check.sh load",
+    "interval": "{{ consul_check_interval }}"
+  }
+
+ ]
+
+}

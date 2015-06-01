@@ -1,11 +1,11 @@
 ---
+- include: users.yml
+
 - name: Install Java SDK
   sudo: true
   yum: 
     name: java-1.8.0-openjdk
     state: present
-
-- include: users.yml
 
 - name: Create HDFS installation directory
   sudo: true
@@ -14,7 +14,6 @@
     owner: hdfs
     group: hdfs
     state: directory
-  register: created_hdfs_install_dir
   tags:
     - hdfs
 
@@ -25,7 +24,6 @@
     owner: hdfs
     group: hdfs
     state: directory
-  register: created_hdfs_conf_dir
   tags:
     - hdfs
 
@@ -37,7 +35,7 @@
   tags:
     - hdfs
 
-- name: Setup HDFS binary
+- name: Unarchive HDFS binary
   sudo_user: hdfs
   sudo: true
   unarchive: 
@@ -55,11 +53,19 @@
   tags:
     - hdfs
 
+- name: Create HDFS configuration files
+  sudo: true
+  template:
+    src: "{{ item }}.xml.j2"
+    dest: "{{ hdfs_conf_dir }}/{{ item }}.xml"
+  with_items:
+    - core-site
+    - hdfs-site
+  tags:
+    - hdfs
+
 - include: namenode.yml
-  when: hdfs_namenode 
+  when: hdfs_namenode
 
 - include: datanode.yml
-  when: not hdfs_namenode 
-
-- include: hdfs.yml
-  when: hdfs_namenode
+  when: hdfs_datanode

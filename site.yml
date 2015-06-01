@@ -16,11 +16,11 @@
 - hosts: all
   roles:
     - common
+    - collectd
     - logrotate
     - consul-template
     - docker
     - dnsmasq
-    - monitoring
     - nginx
     - consul
     - logstash
@@ -52,6 +52,11 @@
   roles:
     - marathon
 
+- hosts: dc1:&chronos_servers
+  gather_facts: no
+  roles:
+    - chronos
+
 - hosts: dc2:&zookeeper_servers
   gather_facts: no
   roles:
@@ -71,6 +76,11 @@
   gather_facts: no
   roles:
     - marathon
+
+- hosts: dc2:&chronos_servers
+  gather_facts: no
+  roles:
+    - chronos
 
 - hosts: dc1:&proxy_servers
   gather_facts: no

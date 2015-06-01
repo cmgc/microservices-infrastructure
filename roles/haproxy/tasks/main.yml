@@ -4,7 +4,7 @@
   template:
     src: haproxy.j2
     dest: /etc/default/haproxy
-  notify: 
+  notify:
     - restart haproxy
   tags:
     - haproxy

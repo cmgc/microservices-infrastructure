@@ -34,6 +34,7 @@ PKGS+=(
     NetworkManager
     mesos
     cyrus-sasl-md5
+    collectd
 )
 
 REPOS+=(

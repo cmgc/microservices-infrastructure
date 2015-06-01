@@ -1,8 +1,0 @@
----
-- name: Setup basic directories on HDFS
-  run_once: true
-  sudo_user: hdfs
-  sudo: true
-  shell: source /etc/profile.d/hadoop.sh; if ! hdfs dfs -test -d /tmp; then hdfs dfs -mkdir /tmp; fi; hdfs dfs -chmod 777 /tmp; if ! hdfs dfs -test -d /user; then hdfs dfs -mkdir -p /user; fi; if ! hdfs dfs -test -d /apps; then hdfs dfs -mkdir -p /apps; fi; if ! hdfs dfs -test -d /logs; then hdfs dfs -mkdir -p /logs; fi
-  tags:
-    - hdfs

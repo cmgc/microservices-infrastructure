@@ -1,0 +1,28 @@
+---
+- name: Wait for Kafka scheduler 
+  run_once: true
+  wait_for: 
+    host: "{{ ansible_hostname }}"
+    port: 7000 
+    timeout: 1800
+    delay: 30
+  tags:
+    - kafka-mesos
+
+- name: Add Kafka brockers  
+  run_once: true
+  sudo: true
+  command: "./kafka-mesos.sh add  0..{{ kafka_brokers - 1 }} --heap {{ kafka_broker_heap }} --mem {{ kafka_broker_memory }} --api http://{{ ansible_hostname }}:7000"
+  args:
+    chdir: "{{ kafka_mesos_install_dir }}"
+  tags:
+    - kafka-mesos
+
+- name: Start Kafka brockers  
+  run_once: true
+  sudo: true
+  command: "./kafka-mesos.sh start 0..{{ kafka_brokers - 1 }} --api http://{{ ansible_hostname }}:7000"
+  args:
+    chdir: "{{ kafka_mesos_install_dir }}"
+  tags:
+    - kafka-mesos

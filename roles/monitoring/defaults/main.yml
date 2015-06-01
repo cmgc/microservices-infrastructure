@@ -1,3 +1,10 @@
 ---
 logging_host: "{{ ansible_ssh_host }}"
 logging_host_port: "25826"
+mesos_master_host: "localhost"
+mesos_master_port: "15050"
+mesos_slave_host: "localhost"
+mesos_slave_port: "15050"
+marathon_host: "localhost"
+marathon_port: "18080"
+zookeper_hosts: "localhost"

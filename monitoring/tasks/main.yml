@@ -1,0 +1,68 @@
+- name: install collectd
+  sudo: yes
+  yum:
+    name: collectd
+    state: latest
+  tags:
+    - monitoring
+
+
+- name: deploy collectd daemon configuration
+  sudo: yes
+  template:
+    src: collectd.conf.j2
+    dest: /etc/collectd.conf
+  tags:
+    - monitoring
+
+- name: deploy collectd network plugin configuration
+  sudo: yes
+  template:
+    src: write_network.conf.j2
+    dest: /etc/collectd.d/write_network.conf
+  tags:
+    - monitoring
+
+- name: create collectd docker plugin directory
+  sudo: yes
+  file:
+    path: /usr/share/collectd/plugins
+    state: directory
+    mode: 0770
+  tags:
+  - monitoring
+
+- name: deploy collectd python plugins configuration
+  sudo: yes
+  template:
+    src: python-plugins.conf.j2
+    dest: /etc/collectd.d/python-plugins.conf
+  tags:
+    - monitoring
+
+- name: deploy collectd docker plugin files
+  sudo: yes
+  copy:
+    src: "roles/monitoring/files/{{ item.src }}"
+    dest: "/usr/share/collectd/plugins/{{ item.src }}"
+    mode: u=r
+  with_items:
+    - src: docker-plugin-requirements.txt
+    - src: dockerplugin.py
+    - src: dockerplugin.db
+    - src: marathon.py
+    - src: mesos-master.py
+    - src: mesos-slave.py
+  tags:
+    - monitoring
+
+- name: install docker plugin requirements
+  sudo: yes
+  pip:
+    requirements: "/usr/share/collectd/plugins/docker-plugin-requirements.txt"
+  notify:
+    - restart collectd
+  tags:
+    - monitoring
+
+

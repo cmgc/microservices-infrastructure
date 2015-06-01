@@ -1,0 +1,4 @@
+log4j.rootCategory=INFO, S
+log4j.appender.S=org.apache.log4j.net.SocketAppender
+log4j.appender.S.port={{ spark_log4j_port }}
+log4j.appender.S.remoteHost={{ spark_log4j_host }}

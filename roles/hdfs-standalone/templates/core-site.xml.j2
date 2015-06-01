@@ -3,6 +3,6 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://{{ groups['name_node'][0] }}:{{ hdfs_namenode_port }}</value>
+    <value>hdfs://{{ (groups.get('name_node', []) + [hdfs_namenode_host])[0] }}:{{ hdfs_namenode_port }}</value>
   </property>
 </configuration>

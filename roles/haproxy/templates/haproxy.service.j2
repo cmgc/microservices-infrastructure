@@ -11,14 +11,14 @@ RestartSec=20
 TimeoutStartSec=0
 
 ExecStartPre=-/usr/bin/docker rm haproxy
-ExecStartPre=-/usr/bin/docker pull {{ haproxy_image }}:{{ haproxy_image_tag }} 
+ExecStartPre=-/usr/bin/docker pull {{ haproxy_image }}:{{ haproxy_image_tag }}
 
 ExecStart=/usr/bin/docker run \
     --rm \
     --name=haproxy \
     --net=host \
     --env-file={{ haproxy_env }}  \
-    {{ haproxy_image }}:{{ haproxy_image_tag }} 
+    {{ haproxy_image }}:{{ haproxy_image_tag }}
 
 ExecStop=/usr/bin/docker kill haproxy
 

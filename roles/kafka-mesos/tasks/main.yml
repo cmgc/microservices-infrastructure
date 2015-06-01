@@ -1,0 +1,51 @@
+---
+- name: Install git package
+  sudo: true
+  yum:
+    name: git
+    state: present
+  tags:
+    - kafka-mesos
+
+- name: Install Java package
+  sudo: true
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+  tags:
+    - kafka-mesos
+
+- name: Download kafka-mesos repo 
+  sudo: true
+  git: 
+    repo: "{{ kafka_mesos_repo }}" 
+    dest: "{{ kafka_mesos_install_dir }}"
+    force: yes
+  tags:
+    - kafka-mesos
+
+- name: Build kafka-mesos project 
+  sudo: true
+  command: "./gradlew jar"
+  args:
+    chdir: "{{ kafka_mesos_install_dir }}"
+    creates: "{{ kafka_mesos_install_dir }}/.gradle"
+  tags:
+    - kafka-mesos
+
+- name: Download Kafka binary
+  sudo: true 
+  get_url: 
+    url: "{{ kafka_binary_url }}/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+    dest: "{{ kafka_mesos_install_dir }}"
+  register: kafka_downloaded
+  tags:
+    - kafka-mesos 
+
+- include: scheduler.yml
+  when: kafka_downloaded | changed
+
+- include: client.yml
+  when: kafka_downloaded | changed
+
+- include: config.yml
