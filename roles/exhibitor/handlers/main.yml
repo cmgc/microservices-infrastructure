@@ -1,0 +1,15 @@
+---
+- name: reload systemd daemon
+  sudo: yes
+  command: systemctl daemon-reload
+  tags: 
+    - exhibitor
+
+- name: register exhibitor service
+  sudo: yes 
+  service:  
+    enabled: yes 
+    name: "{{ exhibitor_service }}"  
+    state: started 
+  tags:  
+    - exhibitor  
